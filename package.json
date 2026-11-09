@@ -1,6 +1,7 @@
 {
   "name": "back2",
   "version": "1.0.0",
+  "type": "module",
   "description": "a backend at chai aur code channel",
   "keywords": [
     "javascript",
@@ -8,9 +9,12 @@
   ],
   "license": "ISC",
   "author": "abhay singh",
-  "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev":"nodemon src/index.js"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
   }
 }
