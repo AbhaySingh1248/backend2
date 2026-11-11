@@ -1,12 +1,12 @@
 // to connect with db
 //thora heavy ho gya but this code is same for every project to connect withdb !!!!
 const asyncHandler = (requestHandler)=>{
-    (req,res,next)=>{
+   return (req,res,next)=>{
    Promise.resolve(requestHandler(req,res,next)).
    catch((err)=>next(err))
     }
 }
-
+//need to return higher order function
 
 
 export {asyncHandler}

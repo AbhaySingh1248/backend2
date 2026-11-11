@@ -1,0 +1,20 @@
+import multer from "multer";
+
+
+const crypto = require('crypto')
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./public/temp")
+  },
+  filename: function (req, file, cb) {
+    //const uniqueSuffix =Date.now()+ '-' +Math.round(Math.random()*1E9)
+    //crypto.randomBytes(16, function (err, raw) {
+     // if (err) return cb(err)
+      cb(null, file.originalname) //raw.toString('hex'))
+  }
+    })
+  //}
+//})
+
+ export const upload = multer({ storage: storage })
