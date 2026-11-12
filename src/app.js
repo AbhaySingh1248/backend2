@@ -5,10 +5,6 @@ import cors from "cors";
 const app = express()  
 
 
-app.get("/test", (req, res) => {
-    console.log("Test route reached");
-    res.send("Server is working!");
-});
 
 
 
