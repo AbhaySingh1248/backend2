@@ -2,10 +2,13 @@ import {asyncHandler} from "../utils/asyncHandler.js";
 import {ApiError} from "../utils/ApiError.js"
 import {User} from "../models/user.models.js"
 import {uploadOnCloudinary} from "../utils/cloudinary.js"
-import {ApiResponse, APiResponse} from "../utils/ApiResponse.js"
+import {ApiResponse,} from "../utils/ApiResponse.js"
 
 
 const registerUser = asyncHandler(async (req ,res)=>{
+
+    //console.log("REQ BODY:", req.body);
+   // console.log("REQ FILES:", req.files);
     // step1 get user details from frontend
     // validation if data correct , not empty ...
     // check if user already exists ?? by  username &email
@@ -19,21 +22,22 @@ const registerUser = asyncHandler(async (req ,res)=>{
 
     //user details from frontend , then destructurei it and store!!
     const {fullName , username , email,password}=req.body
-    console.log("email:",email)
+    //console.log("Checking for existing user with:", { username, email });
+    //console.log("email:",email)
 
     // if(fullName==""){
     //     throw new ApiError(400,"fullname is required")
     // }
 //good method for multiple ifs
     if(
-        [fullName,email,username,password].some((field)=>{field?.trim()===""})
+        [fullName,email,username,password].some((field)=>field?.trim()==="")
         //yaha agar ek v field empty return kiya mtlb khaaali tha and false return!!!!
 
     ){
 throw new ApiError(400,"all fields are not filled")
     }
 
-    const existedError = User.findOne({
+    const existedError = await User.findOne({
         $or: [{username},{email}]
     })
 
@@ -42,7 +46,12 @@ throw new ApiError(400,"all fields are not filled")
     }
     
    const avatarLocalPath=  req.files?.avatar[0]?.path;
-   const coverImgageLocalPath= req.files?.coverImage[0]?.path;
+  // const coverImageLocalPath= req.files?.coverImage[0]?.path;
+
+  let coverImageLocalPath;
+  if(req.files && Array.isArray(req.files.coverImage)  && req.files.coverImage.length >0){
+       coverImageLocalPath=req.files.coverImage[0].path
+  }
 
    //check if avatar aaya or not ??
 
@@ -55,7 +64,7 @@ if(!avatarLocalPath)
 // since it is  time taking need to use await !!! 
 // aage ka code jana hi nhi hai jb tk ye not upload !! so need to wait 
  const avatar = await uploadOnCloudinary(avatarLocalPath)
-const coverImage = await uploadOnCloudinary(coverImgageLocalPath)
+const coverImage = await uploadOnCloudinary(coverImageLocalPath)
 
 if(!avatar){
     throw new ApiError(400 , "avatar is necessary")
@@ -63,7 +72,7 @@ if(!avatar){
 
 // now when everything is done properly so make an object of user and enter in dattabase
 const user = await User.create({
-    fullname,
+    fullName,
     avatar:avatar.url,
     coverImage : coverImage?.url ||"",//since we didnt checked for it earlier 
     email,

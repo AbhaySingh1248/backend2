@@ -58,7 +58,7 @@ userSchema.pre("save", async function(next){
     if( !this.isModified("password")) return next();  // agar modify ni hua then sidha next middleware
 
     this.password= await bcrypt.hash(this.password,10) // ager modified hai to need to encrypt it
-    next()
+    //next()
 })
 
 userSchema.methods.isPasswordCorrect =async function(password){
